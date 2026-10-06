@@ -14,15 +14,7 @@ This project implements all three and measures what each one costs.
 
 ## How it works
 
-```
-                 ┌──────────────────────────────────────────┐
-                 │                 Broker                    │
-                 │                                           │
-Publisher ──TCP──►  Publish ──► [queue] ──► writer ──TCP──► fast-A
-                 │          ├─► [queue] ──► writer ──TCP──► fast-B
-                 │          └─► [queue] ──► writer ──TCP──► SLOW
-                 └──────────────────────────────────────────┘
-```
+![Architecture: a publisher sends to the broker, which gives each subscriber its own queue and writer goroutine. The slow subscriber's queue is full, and the policy decides whether to drop, buffer or block.](docs/architecture.svg)
 
 - Clients connect over **TCP** and send one command per line:
   `SUB <topic>`, `UNSUB <topic>`, `PUB <topic> <message>`.
